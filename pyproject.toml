@@ -1,0 +1,13 @@
+[project]
+name = "antigravity-demon-codex"
+version = "0.1.0"
+description = "Antigravity Agent — The Demon Codex & Denomic Designs"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "streamlit>=1.40.0",
+    "google-genai>=1.0.0",
+]
+
+[tool.uv]
+package = false

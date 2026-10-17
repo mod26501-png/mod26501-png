@@ -8,7 +8,7 @@
 ## 🩸 Sanctum Features
 
 - **Dark Fantasy Aesthetic**: Sanctum Color Law styling (Obsidian, Crimson `#ff4d4d`, Tarnished Gold, Ash Grey) with gothic Cinzel typography.
-- **Multimodal Gemini Integration**: Connects via Google's `google-genai` Python SDK to high-performance reasoning models (`gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-2.0-flash`).
+- **Multimodal Gemini Integration**: Connects via Google's `google-genai` Python SDK to high-performance reasoning models (`gemini-3.8-flash`, `gemini-3.8-pro`, `gemini-2.0-flash`).
 - **Multi-Turn Lore Memory**: Remembers previous relic descriptions, dark lore scripts, and world-building continuity within each session.
 - **Real-Time Streaming**: Live streaming token output with cursor animation.
 - **Ritual Reset**: Clear lore sessions at any time with a single click.
@@ -25,7 +25,7 @@ From PowerShell:
 
 ### 2. Launching via `uv`
 ```powershell
-uv run --with streamlit --with google-genai streamlit run app.py
+uv run streamlit run app.py
 ```
 
 ### 3. Setting your Gemini API Key
