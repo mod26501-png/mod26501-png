@@ -53,7 +53,17 @@ with st.sidebar:
     st.markdown("## 🩸 Antigravity Agent")
     st.markdown("*Arcane intelligence node of Denomic Designs & The Demon Codex.*")
     st.markdown("---")
-    api_key = st.text_input("Gemini API Key", value=os.environ.get("GEMINI_API_KEY", ""), type="password")
+    
+    # Auto-detect key from environment or Streamlit Secrets
+    initial_key = os.environ.get("GEMINI_API_KEY", "")
+    if not initial_key:
+        try:
+            if "GEMINI_API_KEY" in st.secrets:
+                initial_key = st.secrets["GEMINI_API_KEY"]
+        except Exception:
+            pass
+
+    api_key = st.text_input("Gemini API Key", value=initial_key, type="password")
     model_choice = st.selectbox(
         "Engine",
         ["gemini-3.8-flash", "gemini-3.8-pro", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro"],
@@ -80,6 +90,9 @@ if "messages" not in st.session_state:
 
 st.title("🌌 Denomic Antigravity Agent")
 st.caption("Multimodal Dark Fantasy Co-Pilot • Real-Time Streamlit Interface • Synced to The Demon Codex")
+
+if not api_key:
+    st.warning("⚔️ **Sanctum API Key Required**: Enter your Gemini API Key in the left sidebar (or in your Streamlit Cloud Secrets) to awaken the Crucible.")
 
 for message in st.session_state.messages:
     avatar = "🩸" if message["role"] == "assistant" else "⚔️"
