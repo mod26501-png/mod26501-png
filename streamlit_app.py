@@ -93,7 +93,7 @@ with st.sidebar:
     api_key = st.text_input("Gemini API Key", value=initial_key, type="password")
     model_choice = st.selectbox(
         "Engine",
-        ["gemini-3.8-flash", "gemini-3.8-pro", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro"],
+        ["gemini-2.0-flash", "gemini-3.8-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-3.8-pro"],
         index=0
     )
     enable_memory = st.checkbox("Multi-Turn Lore Memory", value=True, help="Maintains context across previous messages in the session.")
@@ -140,7 +140,7 @@ with st.expander("🔮 Offer Relic Artifacts or Lore Scrolls for Evaluation", ex
         for idx, f in enumerate(uploaded_files):
             with cols[idx % 4]:
                 if f.type.startswith("image/"):
-                    st.image(f, caption=f.name, use_container_width=True)
+                    st.image(f, caption=f.name, width="stretch")
                 else:
                     st.caption(f"📜 {f.name} ({round(len(f.getvalue()) / 1024, 1)} KB)")
         
@@ -250,5 +250,13 @@ if active_prompt:
                 response_container.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
         except Exception as e:
+            err_msg = str(e)
             with st.chat_message("assistant", avatar="🩸"):
-                st.error(f"The rite was interrupted: {str(e)}")
+                st.error(f"The rite was interrupted: {err_msg}")
+                if "403" in err_msg or "PERMISSION_DENIED" in err_msg:
+                    st.warning("""
+                    **🔮 Resolving 403 Forbidden / Permission Denied:**
+                    - **Switch the Engine**: In the left sidebar, choose **`gemini-2.0-flash`** (universal standard for Google AI Studio keys).
+                    - **Check Key Restrictions**: In [Google AI Studio](https://aistudio.google.com/apikey), ensure your API Key has no IP or HTTP Referrer restrictions that block requests from Cloud servers.
+                    - **API Enabled**: Verify that the **Generative Language API** is enabled in the Google Cloud Project hosting your key.
+                    """)
