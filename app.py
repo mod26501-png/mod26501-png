@@ -101,7 +101,7 @@ with st.sidebar:
     api_key = st.text_input("Gemini API Key", value=initial_key, type="password")
     model_choice = st.selectbox(
         "Engine",
-        ["gemini-2.0-flash", "gemini-3.8-flash", "gemini-1.5-flash", "gemini-1.5-pro", "gemini-3.8-pro"],
+        ["gemini-3.8-flash", "gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.5-flash", "gemini-2.5-pro", "gemini-3.8-pro"],
         index=0
     )
     enable_memory = st.checkbox("Multi-Turn Lore Memory", value=True, help="Maintains context across previous messages in the session.")
@@ -267,10 +267,17 @@ if active_prompt:
             err_msg = str(e)
             with st.chat_message("assistant", avatar="🩸"):
                 st.error(f"The rite was interrupted: {err_msg}")
-                if "403" in err_msg or "PERMISSION_DENIED" in err_msg:
+                if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg:
+                    st.warning("""
+                    **🔮 Monthly Spend Cap Reached (429 Resource Exhausted):**
+                    - Your Google Cloud / AI Studio project has hit its monthly spending limit.
+                    - Manage or adjust your project spend cap at **[AI Studio Spend Settings](https://ai.studio/spend)**.
+                    - Or generate a fresh API key in a project with active quota at **[Google AI Studio](https://aistudio.google.com/apikey)**.
+                    """)
+                elif "403" in err_msg or "PERMISSION_DENIED" in err_msg:
                     st.warning("""
                     **🔮 Resolving 403 Forbidden / Permission Denied:**
-                    - **Switch the Engine**: In the left sidebar, choose **`gemini-2.0-flash`** (universal standard for Google AI Studio keys).
+                    - **Switch the Engine**: In the left sidebar, choose **`gemini-3.8-flash`**.
                     - **Check Key Restrictions**: In [Google AI Studio](https://aistudio.google.com/apikey), ensure your API Key has no IP or HTTP Referrer restrictions that block requests from Cloud servers.
                     - **API Enabled**: Verify that the **Generative Language API** is enabled in the Google Cloud Project hosting your key.
                     """)
