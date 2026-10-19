@@ -101,7 +101,13 @@ with st.sidebar:
     api_key = st.text_input("Gemini API Key", value=initial_key, type="password")
     model_choice = st.selectbox(
         "Engine",
-        ["gemini-3.8-flash", "gemini-flash-latest", "gemini-flash-lite-latest", "gemini-3.5-flash", "gemini-2.5-pro", "gemini-3.8-pro"],
+        [
+            "gemini-3.8-flash",
+            "gemini-flash-latest",
+            "gemini-flash-lite-latest",
+            "gemini-pro-latest",
+            "gemini-3.1-pro-preview"
+        ],
         index=0
     )
     enable_memory = st.checkbox("Multi-Turn Lore Memory", value=True, help="Maintains context across previous messages in the session.")
