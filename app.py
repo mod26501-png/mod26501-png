@@ -5,8 +5,16 @@ Powered by Streamlit & Google Gemini API
 """
 import os
 import streamlit as st
-from google import genai
-from google.genai import types
+try:
+    from google import genai
+    from google.genai import types
+    GENAI_AVAILABLE = True
+    GENAI_IMPORT_ERROR = None
+except Exception as e:
+    genai = None
+    types = None
+    GENAI_AVAILABLE = False
+    GENAI_IMPORT_ERROR = str(e)
 
 st.set_page_config(
     page_title="Antigravity Agent — The Demon Codex",
@@ -122,6 +130,9 @@ if "messages" not in st.session_state:
 st.title("🌌 Denomic Antigravity Agent")
 st.caption("Multimodal Dark Fantasy Co-Pilot • Real-Time Streamlit Interface • Synced to The Demon Codex")
 
+if not GENAI_AVAILABLE:
+    st.error(f"⚔️ **Google GenAI SDK Unavailable**: {GENAI_IMPORT_ERROR}. Ensure `google-genai` is installed (`pip install -r requirements.txt`).")
+
 if not api_key:
     st.warning("⚔️ **Sanctum API Key Required**: Enter your Gemini API Key in the left sidebar (or in your Streamlit Cloud Secrets) to awaken the Crucible.")
 
@@ -202,7 +213,10 @@ if active_prompt:
                     st.caption(f"📜 Attached Scroll: **{item['name']}**")
         st.markdown(active_prompt)
 
-    if not api_key:
+    if not GENAI_AVAILABLE:
+        with st.chat_message("assistant", avatar="🩸"):
+            st.error(f"Google GenAI SDK is not available: {GENAI_IMPORT_ERROR}")
+    elif not api_key:
         with st.chat_message("assistant", avatar="🩸"):
             st.error("Please provide a Gemini API Key in the sidebar to summon the Antigravity Agent.")
     else:
