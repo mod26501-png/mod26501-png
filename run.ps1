@@ -1,11 +1,19 @@
 # Launch Antigravity Agent Streamlit App
-# Using uv (installed) or fallback to python
-if (Get-Command uv -ErrorAction SilentlyContinue) {
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if (-not $ScriptDir) { $ScriptDir = Get-Location }
+
+$VenvStreamlit = Join-Path $ScriptDir ".venv\Scripts\streamlit.exe"
+$VenvPython = Join-Path $ScriptDir ".venv\Scripts\python.exe"
+
+if (Test-Path $VenvStreamlit) {
+    Write-Host "⚔️ Summoning Antigravity Agent via local virtualenv..." -ForegroundColor DarkRed
+    & $VenvStreamlit run (Join-Path $ScriptDir "app.py")
+} elseif (Get-Command uv -ErrorAction SilentlyContinue) {
     Write-Host "⚔️ Summoning Antigravity Agent via uv..." -ForegroundColor DarkRed
-    uv run --with streamlit --with google-genai streamlit run app.py
-} elseif (Get-Command python -ErrorAction SilentlyContinue) {
-    Write-Host "⚔️ Summoning Antigravity Agent via python..." -ForegroundColor DarkRed
-    python -m streamlit run app.py
+    uv run --with streamlit --with google-genai streamlit run (Join-Path $ScriptDir "app.py")
+} elseif (Test-Path $VenvPython) {
+    Write-Host "⚔️ Summoning Antigravity Agent via python in .venv..." -ForegroundColor DarkRed
+    & $VenvPython -m streamlit run (Join-Path $ScriptDir "app.py")
 } else {
-    Write-Host "❌ Neither uv nor python was detected in PATH." -ForegroundColor Red
+    Write-Host "❌ Could not find .venv or uv. Run: uv venv && uv pip install -r requirements.txt" -ForegroundColor Red
 }
